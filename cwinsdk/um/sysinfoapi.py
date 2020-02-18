@@ -4,54 +4,62 @@ from ctypes import POINTER, Structure, Union, c_double
 from ctypes.wintypes import WORD, BOOL, UINT, DWORD, LPVOID, LPSTR, LPWSTR, LPCWSTR, ULONG, HANDLE, USHORT, LPCSTR
 
 from .. import CEnum, windll
-from .winnt import DWORDLONG, LPOSVERSIONINFOA, LPOSVERSIONINFOW, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PULONGLONG, PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION
+from .winnt import DWORDLONG, LPOSVERSIONINFOA, LPOSVERSIONINFOW, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION, \
+    LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PULONGLONG, \
+    PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION
 from .minwinbase import SYSTEMTIME, LPSYSTEMTIME, LPFILETIME
 from ..shared.basetsd import DWORD_PTR
 from ..shared.ntdef import ULONGLONG, PVOID
 from ..shared.minwindef import PDWORD, PBOOL, LPDWORD, UCHAR
 
+
 class SYSTEM_INFO_DUMMYSTRUCTNAME(Structure):
-	_fields_ = [
-		("wProcessorArchitecture", WORD),
-		("wReserved", WORD),
-	]
+    _fields_ = [
+        ("wProcessorArchitecture", WORD),
+        ("wReserved", WORD),
+    ]
+
 
 class SYSTEM_INFO_DUMMYUNIONNAME(Union):
-	_anonymous_ = ["dummy"]
-	_fields_ = [
-		("dwOemId", DWORD),
-		("dummy", SYSTEM_INFO_DUMMYSTRUCTNAME),
-	]
+    _anonymous_ = ["dummy"]
+    _fields_ = [
+        ("dwOemId", DWORD),
+        ("dummy", SYSTEM_INFO_DUMMYSTRUCTNAME),
+    ]
+
 
 class SYSTEM_INFO(Structure):
-	_anonymous_ = ["dummy"]
-	_fields_ = [
-		("dummy", SYSTEM_INFO_DUMMYUNIONNAME),
-		("dwPageSize", DWORD),
-		("lpMinimumApplicationAddress", LPVOID),
-		("lpMaximumApplicationAddress", LPVOID),
-		("dwActiveProcessorMask", DWORD_PTR),
-		("dwNumberOfProcessors", DWORD),
-		("dwProcessorType", DWORD),
-		("dwAllocationGranularity", DWORD),
-		("wProcessorLevel", WORD),
-		("wProcessorRevision", WORD),
-	]
+    _anonymous_ = ["dummy"]
+    _fields_ = [
+        ("dummy", SYSTEM_INFO_DUMMYUNIONNAME),
+        ("dwPageSize", DWORD),
+        ("lpMinimumApplicationAddress", LPVOID),
+        ("lpMaximumApplicationAddress", LPVOID),
+        ("dwActiveProcessorMask", DWORD_PTR),
+        ("dwNumberOfProcessors", DWORD),
+        ("dwProcessorType", DWORD),
+        ("dwAllocationGranularity", DWORD),
+        ("wProcessorLevel", WORD),
+        ("wProcessorRevision", WORD),
+    ]
+
 
 LPSYSTEM_INFO = POINTER(SYSTEM_INFO)
 
+
 class MEMORYSTATUSEX(Structure):
-	_fields_ = [
-		("dwLength", DWORD),
-		("dwMemoryLoad", DWORD),
-		("ullTotalPhys", DWORDLONG),
-		("ullAvailPhys", DWORDLONG),
-		("ullTotalPageFile", DWORDLONG),
-		("ullAvailPageFile", DWORDLONG),
-		("ullTotalVirtual", DWORDLONG),
-		("ullAvailVirtual", DWORDLONG),
-		("ullAvailExtendedVirtual", DWORDLONG),
-	]
+    _fields_ = [
+        ("dwLength", DWORD),
+        ("dwMemoryLoad", DWORD),
+        ("ullTotalPhys", DWORDLONG),
+        ("ullAvailPhys", DWORDLONG),
+        ("ullTotalPageFile", DWORDLONG),
+        ("ullAvailPageFile", DWORDLONG),
+        ("ullTotalVirtual", DWORDLONG),
+        ("ullAvailVirtual", DWORDLONG),
+        ("ullAvailExtendedVirtual", DWORDLONG),
+    ]
+
 
 LPMEMORYSTATUSEX = POINTER(MEMORYSTATUSEX)
 
@@ -80,7 +88,7 @@ GetVersion.argtypes = []
 GetVersion.restype = DWORD
 
 SetLocalTime = windll.kernel32.SetLocalTime
-SetLocalTime.argtypes = [POINTER(SYSTEMTIME)] # CONST
+SetLocalTime.argtypes = [POINTER(SYSTEMTIME)]  # CONST
 SetLocalTime.restype = BOOL
 
 GetTickCount = windll.kernel32.GetTickCount
@@ -95,9 +103,9 @@ GetSystemTimeAdjustment = windll.kernel32.GetSystemTimeAdjustment
 GetSystemTimeAdjustment.argtypes = [PDWORD, PDWORD, PBOOL]
 GetSystemTimeAdjustment.restype = BOOL
 
-#GetSystemTimeAdjustmentPrecise = windll.mincore.GetSystemTimeAdjustmentPrecise
-#GetSystemTimeAdjustmentPrecise.argtypes = [PDWORD64, PDWORD64, PBOOL]
-#GetSystemTimeAdjustmentPrecise.restype = BOOL
+# GetSystemTimeAdjustmentPrecise = windll.mincore.GetSystemTimeAdjustmentPrecise
+# GetSystemTimeAdjustmentPrecise.argtypes = [PDWORD64, PDWORD64, PBOOL]
+# GetSystemTimeAdjustmentPrecise.restype = BOOL
 
 GetSystemDirectoryA = windll.kernel32.GetSystemDirectoryA
 GetSystemDirectoryA.argtypes = [LPSTR, UINT]
@@ -123,16 +131,18 @@ GetSystemWindowsDirectoryW = windll.kernel32.GetSystemWindowsDirectoryW
 GetSystemWindowsDirectoryW.argtypes = [LPWSTR, UINT]
 GetSystemWindowsDirectoryW.restype = UINT
 
+
 class COMPUTER_NAME_FORMAT(CEnum):
-	ComputerNameNetBIOS = 0
-	ComputerNameDnsHostname = 1
-	ComputerNameDnsDomain = 2
-	ComputerNameDnsFullyQualified = 3
-	ComputerNamePhysicalNetBIOS = 4
-	ComputerNamePhysicalDnsHostname = 5
-	ComputerNamePhysicalDnsDomain = 6
-	ComputerNamePhysicalDnsFullyQualified = 7
-	ComputerNameMax = 8
+    ComputerNameNetBIOS = 0
+    ComputerNameDnsHostname = 1
+    ComputerNameDnsDomain = 2
+    ComputerNameDnsFullyQualified = 3
+    ComputerNamePhysicalNetBIOS = 4
+    ComputerNamePhysicalDnsHostname = 5
+    ComputerNamePhysicalDnsDomain = 6
+    ComputerNamePhysicalDnsFullyQualified = 7
+    ComputerNameMax = 8
+
 
 GetComputerNameExA = windll.kernel32.GetComputerNameExA
 GetComputerNameExA.argtypes = [COMPUTER_NAME_FORMAT, LPSTR, LPDWORD]
@@ -147,7 +157,7 @@ SetComputerNameExW.argtypes = [COMPUTER_NAME_FORMAT, LPCWSTR]
 SetComputerNameExW.restype = BOOL
 
 SetSystemTime = windll.kernel32.SetSystemTime
-SetSystemTime.argtypes = [POINTER(SYSTEMTIME)] # CONST
+SetSystemTime.argtypes = [POINTER(SYSTEMTIME)]  # CONST
 SetSystemTime.restype = BOOL
 
 GetVersionExA = windll.kernel32.GetVersionExA
@@ -163,7 +173,8 @@ GetLogicalProcessorInformation.argtypes = [PSYSTEM_LOGICAL_PROCESSOR_INFORMATION
 GetLogicalProcessorInformation.restype = BOOL
 
 GetLogicalProcessorInformationEx = windll.kernel32.GetLogicalProcessorInformationEx
-GetLogicalProcessorInformationEx.argtypes = [LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX, PDWORD]
+GetLogicalProcessorInformationEx.argtypes = [LOGICAL_PROCESSOR_RELATIONSHIP, PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX,
+                                             PDWORD]
 GetLogicalProcessorInformationEx.restype = BOOL
 
 GetNativeSystemInfo = windll.kernel32.GetNativeSystemInfo
@@ -182,9 +193,9 @@ VerSetConditionMask = windll.kernel32.VerSetConditionMask
 VerSetConditionMask.argtypes = [ULONGLONG, ULONG, UCHAR]
 VerSetConditionMask.restype = ULONGLONG
 
-#GetOsSafeBootMode = windll.mincore.GetOsSafeBootMode
-#GetOsSafeBootMode.argtypes = [PDWORD]
-#GetOsSafeBootMode.restype = BOOL
+# GetOsSafeBootMode = windll.mincore.GetOsSafeBootMode
+# GetOsSafeBootMode.argtypes = [PDWORD]
+# GetOsSafeBootMode.restype = BOOL
 
 EnumSystemFirmwareTables = windll.kernel32.EnumSystemFirmwareTables
 EnumSystemFirmwareTables.argtypes = [DWORD, PVOID, DWORD]
@@ -212,9 +223,9 @@ SetSystemTimeAdjustment = windll.kernel32.SetSystemTimeAdjustment
 SetSystemTimeAdjustment.argtypes = [DWORD, BOOL]
 SetSystemTimeAdjustment.restype = BOOL
 
-#SetSystemTimeAdjustmentPrecise = windll.mincore.SetSystemTimeAdjustmentPrecise
-#SetSystemTimeAdjustmentPrecise.argtypes = [DWORD64, BOOL]
-#SetSystemTimeAdjustmentPrecise.restype = BOOL
+# SetSystemTimeAdjustmentPrecise = windll.mincore.SetSystemTimeAdjustmentPrecise
+# SetSystemTimeAdjustmentPrecise.argtypes = [DWORD64, BOOL]
+# SetSystemTimeAdjustmentPrecise.restype = BOOL
 
 InstallELAMCertificateInfo = windll.kernel32.InstallELAMCertificateInfo
 InstallELAMCertificateInfo.argtypes = [HANDLE]
@@ -224,13 +235,13 @@ GetProcessorSystemCycleTime = windll.kernel32.GetProcessorSystemCycleTime
 GetProcessorSystemCycleTime.argtypes = [USHORT, PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION, PDWORD]
 GetProcessorSystemCycleTime.restype = BOOL
 
-#GetOsManufacturingMode = windll.XXX.GetOsManufacturingMode
-#GetOsManufacturingMode.argtypes = [PBOOL]
-#GetOsManufacturingMode.restype = BOOL
+# GetOsManufacturingMode = windll.XXX.GetOsManufacturingMode
+# GetOsManufacturingMode.argtypes = [PBOOL]
+# GetOsManufacturingMode.restype = BOOL
 
-#GetIntegratedDisplaySize = windll.onecore.GetIntegratedDisplaySize
-#GetIntegratedDisplaySize.argtypes = [POINTER(c_double)]
-#GetIntegratedDisplaySize.restype = HRESULT
+# GetIntegratedDisplaySize = windll.onecore.GetIntegratedDisplaySize
+# GetIntegratedDisplaySize.argtypes = [POINTER(c_double)]
+# GetIntegratedDisplaySize.restype = HRESULT
 
 SetComputerNameA = windll.kernel32.SetComputerNameA
 SetComputerNameA.argtypes = [LPCSTR]

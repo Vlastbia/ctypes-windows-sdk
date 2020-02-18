@@ -39,59 +39,64 @@ DISABLE_SMART = 0xD9
 RETURN_SMART_STATUS = 0xDA
 ENABLE_DISABLE_AUTO_OFFLINE = 0xDB
 
+
 class GETVERSIONINPARAMS(Structure):
-	__slots__ = ()
-	_pack_ = 1
-	_fields_ = [
-		("bVersion", UCHAR),
-		("bRevision", UCHAR),
-		("bReserved", UCHAR),
-		("bIDEDeviceMap", UCHAR),
-		("fCapabilities", ULONG),
-		("dwReserved", ULONG*4),
-	]
+    __slots__ = ()
+    _pack_ = 1
+    _fields_ = [
+        ("bVersion", UCHAR),
+        ("bRevision", UCHAR),
+        ("bReserved", UCHAR),
+        ("bIDEDeviceMap", UCHAR),
+        ("fCapabilities", ULONG),
+        ("dwReserved", ULONG * 4),
+    ]
+
 
 class IDEREGS(Structure):
-	__slots__ = ()
-	_pack_ = 1
-	_fields_ = [
-		("bFeaturesReg", UCHAR),
-		("bSectorCountReg", UCHAR),
-		("bSectorNumberReg", UCHAR),
-		("bCylLowReg", UCHAR),
-		("bCylHighReg", UCHAR),
-		("bDriveHeadReg", UCHAR),
-		("bCommandReg", UCHAR),
-		("bReserved", UCHAR),
-	]
+    __slots__ = ()
+    _pack_ = 1
+    _fields_ = [
+        ("bFeaturesReg", UCHAR),
+        ("bSectorCountReg", UCHAR),
+        ("bSectorNumberReg", UCHAR),
+        ("bCylLowReg", UCHAR),
+        ("bCylHighReg", UCHAR),
+        ("bDriveHeadReg", UCHAR),
+        ("bCommandReg", UCHAR),
+        ("bReserved", UCHAR),
+    ]
+
 
 class SENDCMDINPARAMS(Structure):
-	__slots__ = ()
-	_pack_ = 1
-	_fields_ = [
-		("cBufferSize", ULONG),
-		("irDriveRegs", IDEREGS),
-		("bDriveNumber", UCHAR),
-		("bReserved", UCHAR*3),
-		("dwReserved", ULONG*4),
-		("bBuffer", UCHAR*1),
-	]
+    __slots__ = ()
+    _pack_ = 1
+    _fields_ = [
+        ("cBufferSize", ULONG),
+        ("irDriveRegs", IDEREGS),
+        ("bDriveNumber", UCHAR),
+        ("bReserved", UCHAR * 3),
+        ("dwReserved", ULONG * 4),
+        ("bBuffer", UCHAR * 1),
+    ]
+
 
 class DRIVERSTATUS(Structure):
-	__slots__ = ()
-	_pack_ = 1
-	_fields_ = [
-		("bDriverError", UCHAR),
-		("bIDEError", UCHAR),
-		("bReserved", UCHAR*2),
-		("dwReserved", ULONG*2),
-	]
+    __slots__ = ()
+    _pack_ = 1
+    _fields_ = [
+        ("bDriverError", UCHAR),
+        ("bIDEError", UCHAR),
+        ("bReserved", UCHAR * 2),
+        ("dwReserved", ULONG * 2),
+    ]
+
 
 class SENDCMDOUTPARAMS(Structure):
-	__slots__ = ()
-	_pack_ = 1
-	_fields_ = [
-		("cBufferSize", ULONG),
-		("DriverStatus", DRIVERSTATUS),
-		("bBuffer", UCHAR*1),
-	]
+    __slots__ = ()
+    _pack_ = 1
+    _fields_ = [
+        ("cBufferSize", ULONG),
+        ("DriverStatus", DRIVERSTATUS),
+        ("bBuffer", UCHAR * 1),
+    ]

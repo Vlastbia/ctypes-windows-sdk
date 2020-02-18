@@ -2,14 +2,17 @@ from __future__ import absolute_import, division, print_function, unicode_litera
 
 from .. import CEnum
 
+
 class SECURITY_IMPERSONATION_LEVEL(CEnum):
-	SecurityAnonymous = 0
-	SecurityIdentification = 1
-	SecurityImpersonation = 2
-	SecurityDelegation = 3
+    SecurityAnonymous = 0
+    SecurityIdentification = 1
+    SecurityImpersonation = 2
+    SecurityDelegation = 3
+
 
 def CTL_CODE(DeviceType, Function, Method, Access):
-	return (DeviceType << 16) | (Access << 14) | (Function << 2) | Method
+    return (DeviceType << 16) | (Access << 14) | (Function << 2) | Method
+
 
 FILE_DEVICE_BEEP = 0x00000001
 FILE_DEVICE_CD_ROM = 0x00000002
@@ -30,7 +33,7 @@ FILE_DEVICE_MULTI_UNC_PROVIDER = 0x00000010
 FILE_DEVICE_NAMED_PIPE = 0x00000011
 FILE_DEVICE_NETWORK = 0x00000012
 FILE_DEVICE_NETWORK_BROWSER = 0x00000013
-FILE_DEVICE_NETWORK_FILE_SYSTEM= 0x00000014
+FILE_DEVICE_NETWORK_FILE_SYSTEM = 0x00000014
 FILE_DEVICE_NULL = 0x00000015
 FILE_DEVICE_PARALLEL_PORT = 0x00000016
 FILE_DEVICE_PHYSICAL_NETCARD = 0x00000017

@@ -18,10 +18,10 @@ PUCHAR = POINTER(UCHAR)
 MAX_PATH = 260
 
 DWORD = c_ulong
-BOOL = c_int 
+BOOL = c_int
 BYTE = c_ubyte
-WORD = c_ushort 
-FLOAT = c_float 
+WORD = c_ushort
+FLOAT = c_float
 PFLOAT = POINTER(FLOAT)
 PBOOL = POINTER(BOOL)
 LPBOOL = POINTER(BOOL)
@@ -42,9 +42,9 @@ INT = c_int
 UINT = c_uint
 PUINT = POINTER(UINT)
 
-WPARAM = UINT_PTR 
-LPARAM = LONG_PTR 
-LRESULT = LONG_PTR 
+WPARAM = UINT_PTR
+LPARAM = LONG_PTR
+LRESULT = LONG_PTR
 
 SPHANDLE = POINTER(HANDLE)
 LPHANDLE = POINTER(HANDLE)
@@ -53,15 +53,17 @@ HLOCAL = HANDLE
 GLOBALHANDLE = HANDLE
 LOCALHANDLE = HANDLE
 
-ATOM = WORD # BUGBUG - might want to remove this from minwin
+ATOM = WORD  # BUGBUG - might want to remove this from minwin
+
 
 def DECLARE_HANDLE():
-	class HANDLE__(Structure):
-		_fields_ = [
-			("unused", c_int),
-		]
+    class HANDLE__(Structure):
+        _fields_ = [
+            ("unused", c_int),
+        ]
 
-	return POINTER(HANDLE__)
+    return POINTER(HANDLE__)
+
 
 HKEY = DECLARE_HANDLE()
 HMETAFILE = DECLARE_HANDLE()
@@ -76,9 +78,12 @@ HTASK = DECLARE_HANDLE()
 HWINSTA = DECLARE_HANDLE()
 HKL = DECLARE_HANDLE()
 
+
 class FILETIME(Structure):
-	_fields_ = [
-		("dwLowDateTime", DWORD),
-		("dwHighDateTime", DWORD),
-	]
+    _fields_ = [
+        ("dwLowDateTime", DWORD),
+        ("dwHighDateTime", DWORD),
+    ]
+
+
 PFILETIME = LPFILETIME = POINTER(FILETIME)

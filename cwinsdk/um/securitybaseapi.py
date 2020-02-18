@@ -12,15 +12,18 @@ AccessCheck.argtypes = [PSECURITY_DESCRIPTOR, HANDLE, DWORD, PGENERIC_MAPPING, P
 AccessCheck.restype = BOOL
 
 AccessCheckAndAuditAlarmW = windll.advapi32.AccessCheckAndAuditAlarmW
-AccessCheckAndAuditAlarmW.argtypes = [LPCWSTR, LPVOID, LPWSTR, LPWSTR, PSECURITY_DESCRIPTOR, DWORD, PGENERIC_MAPPING, BOOL, LPDWORD, LPBOOL, LPBOOL]
+AccessCheckAndAuditAlarmW.argtypes = [LPCWSTR, LPVOID, LPWSTR, LPWSTR, PSECURITY_DESCRIPTOR, DWORD, PGENERIC_MAPPING,
+                                      BOOL, LPDWORD, LPBOOL, LPBOOL]
 AccessCheckAndAuditAlarmW.restype = BOOL
 
 AccessCheckByType = windll.advapi32.AccessCheckByType
-AccessCheckByType.argtypes = [PSECURITY_DESCRIPTOR, PSID, HANDLE, DWORD, POBJECT_TYPE_LIST, DWORD, PGENERIC_MAPPING, PPRIVILEGE_SET, LPDWORD, LPDWORD, LPBOOL]
+AccessCheckByType.argtypes = [PSECURITY_DESCRIPTOR, PSID, HANDLE, DWORD, POBJECT_TYPE_LIST, DWORD, PGENERIC_MAPPING,
+                              PPRIVILEGE_SET, LPDWORD, LPDWORD, LPBOOL]
 AccessCheckByType.restype = BOOL
 
 AccessCheckByTypeResultList = windll.advapi32.AccessCheckByTypeResultList
-AccessCheckByTypeResultList.argtypes = [PSECURITY_DESCRIPTOR, PSID, HANDLE, DWORD, POBJECT_TYPE_LIST, DWORD, PGENERIC_MAPPING, PPRIVILEGE_SET, LPDWORD, LPDWORD, LPDWORD]
+AccessCheckByTypeResultList.argtypes = [PSECURITY_DESCRIPTOR, PSID, HANDLE, DWORD, POBJECT_TYPE_LIST, DWORD,
+                                        PGENERIC_MAPPING, PPRIVILEGE_SET, LPDWORD, LPDWORD, LPDWORD]
 AccessCheckByTypeResultList.restype = BOOL
 
 '''
@@ -270,7 +273,6 @@ AdjustTokenGroups(
 AdjustTokenPrivileges = windll.advapi32.AdjustTokenPrivileges
 AdjustTokenPrivileges.argtypes = [HANDLE, BOOL, PTOKEN_PRIVILEGES, DWORD, PTOKEN_PRIVILEGES, PDWORD]
 AdjustTokenPrivileges.restype = BOOL
-
 
 '''
 BOOL

@@ -9,7 +9,7 @@ from ..shared.minwindef import HMODULE, HRSRC, HGLOBAL
 from ..shared.basetsd import LONG_PTR
 from .winnt import LANGID
 
-FARPROC = LPVOID # todo: where does this come from?
+FARPROC = LPVOID  # todo: where does this come from?
 
 ENUMRESTYPEPROCW = CFUNCTYPE(BOOL, HMODULE, LPWSTR, LONG_PTR)
 ENUMRESTYPEPROCA = CFUNCTYPE(BOOL, HMODULE, LPSTR, LONG_PTR)

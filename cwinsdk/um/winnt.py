@@ -22,8 +22,8 @@ PWCHAR = POINTER(WCHAR)
 LPWCH = POINTER(WCHAR)
 PWCH = POINTER(WCHAR)
 
-LPCWCH = POINTER(WCHAR) # const
-PCWCH = POINTER(WCHAR) # const
+LPCWCH = POINTER(WCHAR)  # const
+PCWCH = POINTER(WCHAR)  # const
 
 NWPSTR = POINTER(WCHAR)
 LPWSTR = POINTER(WCHAR)
@@ -46,174 +46,190 @@ HRESULT = LONG
 PLONGLONG = POINTER(LONGLONG)
 PULONGLONG = POINTER(ULONGLONG)
 
+
 # moved
 
 class _IMAGE_RUNTIME_FUNCTION_ENTRY_UNION(Union):
-	_fields_ = [
-		("UnwindInfoAddress", DWORD),
-		("UnwindData", DWORD),
-	]
+    _fields_ = [
+        ("UnwindInfoAddress", DWORD),
+        ("UnwindData", DWORD),
+    ]
+
 
 class _IMAGE_RUNTIME_FUNCTION_ENTRY(Union):
-	_anonymous_ = ("u", )
-	_fields_ = [
-		("BeginAddress", DWORD),
-		("EndAddress", DWORD),
-		("u", _IMAGE_RUNTIME_FUNCTION_ENTRY_UNION),
-	]
+    _anonymous_ = ("u",)
+    _fields_ = [
+        ("BeginAddress", DWORD),
+        ("EndAddress", DWORD),
+        ("u", _IMAGE_RUNTIME_FUNCTION_ENTRY_UNION),
+    ]
+
 
 EXCEPTION_MAXIMUM_PARAMETERS = 15
 
+
 class _EXCEPTION_RECORD(Structure):
-	pass
+    pass
+
 
 _EXCEPTION_RECORD._fields_ = [
-	("ExceptionCode", DWORD),
-	("ExceptionFlags", DWORD),
-	("ExceptionRecord", POINTER(_EXCEPTION_RECORD)),
-	("ExceptionAddress", PVOID),
-	("NumberParameters", DWORD),
-	("ExceptionInformation", ULONG_PTR*EXCEPTION_MAXIMUM_PARAMETERS),
+    ("ExceptionCode", DWORD),
+    ("ExceptionFlags", DWORD),
+    ("ExceptionRecord", POINTER(_EXCEPTION_RECORD)),
+    ("ExceptionAddress", PVOID),
+    ("NumberParameters", DWORD),
+    ("ExceptionInformation", ULONG_PTR * EXCEPTION_MAXIMUM_PARAMETERS),
 ]
 
 EXCEPTION_RECORD = _EXCEPTION_RECORD
 
+
 class M128A(Structure):
-	_fields_ = [
-		("Low", ULONGLONG),
-		("High", LONGLONG),
-	]
+    _fields_ = [
+        ("Low", ULONGLONG),
+        ("High", LONGLONG),
+    ]
+
 
 class XSAVE_FORMAT(Structure):
-	_fields_ = [
-		("ControlWord", WORD),
-		("StatusWord", WORD),
-		("TagWord", BYTE),
-		("Reserved1", BYTE),
-		("ErrorOpcode", WORD),
-		("ErrorOffset", DWORD),
-		("ErrorSelector", WORD),
-		("Reserved2", WORD),
-		("DataOffset", DWORD),
-		("DataSelector", WORD),
-		("Reserved3", WORD),
-		("MxCsr", DWORD),
-		("MxCsr_Mask", DWORD),
-		("FloatRegisters", M128A*8),
+    _fields_ = [
+        ("ControlWord", WORD),
+        ("StatusWord", WORD),
+        ("TagWord", BYTE),
+        ("Reserved1", BYTE),
+        ("ErrorOpcode", WORD),
+        ("ErrorOffset", DWORD),
+        ("ErrorSelector", WORD),
+        ("Reserved2", WORD),
+        ("DataOffset", DWORD),
+        ("DataSelector", WORD),
+        ("Reserved3", WORD),
+        ("MxCsr", DWORD),
+        ("MxCsr_Mask", DWORD),
+        ("FloatRegisters", M128A * 8),
 
-		#if defined(_WIN64)
-		("XmmRegisters", M128A*16 ),
-		("Reserved4", BYTE*96 ),
-		#else
-		("XmmRegisters", M128A*8 ),
-		("Reserved4", BYTE*224 ),
-		#endif
-	]
+        # if defined(_WIN64)
+        ("XmmRegisters", M128A * 16),
+        ("Reserved4", BYTE * 96),
+        # else
+        ("XmmRegisters", M128A * 8),
+        ("Reserved4", BYTE * 224),
+        # endif
+    ]
+
 
 XMM_SAVE_AREA32 = XSAVE_FORMAT
 
+
 class _CONTEXT_STRUCT(Structure):
-	_fields_ = [
-		("Header", M128A*2),
-		("Legacy", M128A*8),
-		("Xmm0", M128A),
-		("Xmm1", M128A),
-		("Xmm2", M128A),
-		("Xmm3", M128A),
-		("Xmm4", M128A),
-		("Xmm5", M128A),
-		("Xmm6", M128A),
-		("Xmm7", M128A),
-		("Xmm8", M128A),
-		("Xmm9", M128A),
-		("Xmm10", M128A),
-		("Xmm11", M128A),
-		("Xmm12", M128A),
-		("Xmm13", M128A),
-		("Xmm14", M128A),
-		("Xmm15", M128A),
-	]
+    _fields_ = [
+        ("Header", M128A * 2),
+        ("Legacy", M128A * 8),
+        ("Xmm0", M128A),
+        ("Xmm1", M128A),
+        ("Xmm2", M128A),
+        ("Xmm3", M128A),
+        ("Xmm4", M128A),
+        ("Xmm5", M128A),
+        ("Xmm6", M128A),
+        ("Xmm7", M128A),
+        ("Xmm8", M128A),
+        ("Xmm9", M128A),
+        ("Xmm10", M128A),
+        ("Xmm11", M128A),
+        ("Xmm12", M128A),
+        ("Xmm13", M128A),
+        ("Xmm14", M128A),
+        ("Xmm15", M128A),
+    ]
+
 
 class _CONTEXT_UNION(Union):
-	_anonymous_ = ("u", )
-	_fields_ = [
-		("FltSave", XMM_SAVE_AREA32),
-		("u", _CONTEXT_STRUCT),
-	]
+    _anonymous_ = ("u",)
+    _fields_ = [
+        ("FltSave", XMM_SAVE_AREA32),
+        ("u", _CONTEXT_STRUCT),
+    ]
+
 
 class _CONTEXT(Structure):
-	_anonymous_ = ("u", )
-	_fields_ = [
-		("P1Home", DWORD64),
-		("P2Home", DWORD64),
-		("P3Home", DWORD64),
-		("P4Home", DWORD64),
-		("P5Home", DWORD64),
-		("P6Home", DWORD64),
+    _anonymous_ = ("u",)
+    _fields_ = [
+        ("P1Home", DWORD64),
+        ("P2Home", DWORD64),
+        ("P3Home", DWORD64),
+        ("P4Home", DWORD64),
+        ("P5Home", DWORD64),
+        ("P6Home", DWORD64),
 
-		("ContextFlags", DWORD),
-		("MxCsr", DWORD),
+        ("ContextFlags", DWORD),
+        ("MxCsr", DWORD),
 
-		("SegCs", WORD),
-		("SegDs", WORD),
-		("SegEs", WORD),
-		("SegFs", WORD),
-		("SegGs", WORD),
-		("SegSs", WORD),
-		("EFlags", DWORD),
+        ("SegCs", WORD),
+        ("SegDs", WORD),
+        ("SegEs", WORD),
+        ("SegFs", WORD),
+        ("SegGs", WORD),
+        ("SegSs", WORD),
+        ("EFlags", DWORD),
 
-		("Dr0", DWORD64),
-		("Dr1", DWORD64),
-		("Dr2", DWORD64),
-		("Dr3", DWORD64),
-		("Dr6", DWORD64),
-		("Dr7", DWORD64),
+        ("Dr0", DWORD64),
+        ("Dr1", DWORD64),
+        ("Dr2", DWORD64),
+        ("Dr3", DWORD64),
+        ("Dr6", DWORD64),
+        ("Dr7", DWORD64),
 
-		("Rax", DWORD64),
-		("Rcx", DWORD64),
-		("Rdx", DWORD64),
-		("Rbx", DWORD64),
-		("Rsp", DWORD64),
-		("Rbp", DWORD64),
-		("Rsi", DWORD64),
-		("Rdi", DWORD64),
-		("R8", DWORD64),
-		("R9", DWORD64),
-		("R10", DWORD64),
-		("R11", DWORD64),
-		("R12", DWORD64),
-		("R13", DWORD64),
-		("R14", DWORD64),
-		("R15", DWORD64),
+        ("Rax", DWORD64),
+        ("Rcx", DWORD64),
+        ("Rdx", DWORD64),
+        ("Rbx", DWORD64),
+        ("Rsp", DWORD64),
+        ("Rbp", DWORD64),
+        ("Rsi", DWORD64),
+        ("Rdi", DWORD64),
+        ("R8", DWORD64),
+        ("R9", DWORD64),
+        ("R10", DWORD64),
+        ("R11", DWORD64),
+        ("R12", DWORD64),
+        ("R13", DWORD64),
+        ("R14", DWORD64),
+        ("R15", DWORD64),
 
-		("Rip", DWORD64),
+        ("Rip", DWORD64),
 
-		("u", _CONTEXT_UNION),
+        ("u", _CONTEXT_UNION),
 
-		("VectorRegister", M128A*26),
-		("VectorControl", DWORD64),
+        ("VectorRegister", M128A * 26),
+        ("VectorControl", DWORD64),
 
-		("DebugControl", DWORD64),
-		("LastBranchToRip", DWORD64),
-		("LastBranchFromRip", DWORD64),
-		("LastExceptionToRip", DWORD64),
-		("LastExceptionFromRip", DWORD64),
-	]
+        ("DebugControl", DWORD64),
+        ("LastBranchToRip", DWORD64),
+        ("LastBranchFromRip", DWORD64),
+        ("LastExceptionToRip", DWORD64),
+        ("LastExceptionFromRip", DWORD64),
+    ]
+
 
 CONTEXT = _CONTEXT
 
+
 class SID_IDENTIFIER_AUTHORITY(Structure):
-	_fields_ = [
-		("Value", BYTE*6),
-	]
+    _fields_ = [
+        ("Value", BYTE * 6),
+    ]
+
 
 class SID(Structure):
-	_fields_ = [
-		("Revision", BYTE),
-		("SubAuthorityCount", BYTE),
-		("IdentifierAuthority", SID_IDENTIFIER_AUTHORITY),
-		("SubAuthority", DWORD*ANYSIZE_ARRAY),
-	]
+    _fields_ = [
+        ("Revision", BYTE),
+        ("SubAuthorityCount", BYTE),
+        ("IdentifierAuthority", SID_IDENTIFIER_AUTHORITY),
+        ("SubAuthority", DWORD * ANYSIZE_ARRAY),
+    ]
+
+
 PSID = POINTER(SID)
 
 # /moved
@@ -224,31 +240,36 @@ LANGID = WORD
 
 ALL_PROCESSOR_GROUPS = 0xffff
 
+
 class PROCESSOR_NUMBER(Structure):
-	_fields_ = [
-		("Group", WORD),
-		("Number", BYTE),
-		("Reserved", BYTE),
-	]
+    _fields_ = [
+        ("Group", WORD),
+        ("Number", BYTE),
+        ("Reserved", BYTE),
+    ]
+
 
 class GROUP_AFFINITY(Structure):
-	_fields_ = [
-		("Mask", KAFFINITY),
-		("Group", WORD),
-		("Reserved", WORD*3),
-	]
+    _fields_ = [
+        ("Mask", KAFFINITY),
+        ("Group", WORD),
+        ("Reserved", WORD * 3),
+    ]
 
-#if defined(_WIN64)
+
+# if defined(_WIN64)
 MAXIMUM_PROC_PER_GROUP = 64
-#else
+# else
 MAXIMUM_PROC_PER_GROUP = 32
-#endif
+# endif
 
 MAXIMUM_PROCESSORS = MAXIMUM_PROC_PER_GROUP
 
+
 class COMPARTMENT_ID(CEnum):
-	UNSPECIFIED_COMPARTMENT_ID = 0
-	DEFAULT_COMPARTMENT_ID = 1
+    UNSPECIFIED_COMPARTMENT_ID = 0
+    DEFAULT_COMPARTMENT_ID = 1
+
 
 APPLICATION_ERROR_MASK = 0x20000000
 ERROR_SEVERITY_SUCCESS = 0x00000000
@@ -258,33 +279,39 @@ ERROR_SEVERITY_ERROR = 0xC0000000
 
 MAXLONGLONG = 0x7fffffffffffffff
 
+
 class LARGE_INTEGER_STRUCT(Structure):
-	_fields_ = [
-		("LowPart", DWORD),
-		("HighPart", LONG),
-	]
+    _fields_ = [
+        ("LowPart", DWORD),
+        ("HighPart", LONG),
+    ]
+
 
 class LARGE_INTEGER(Union):
-	_anonymous_ = ("u", )
-	_fields_ = [
-		("u", LARGE_INTEGER_STRUCT),
-		("QuadPart", LONGLONG),
-	]
+    _anonymous_ = ("u",)
+    _fields_ = [
+        ("u", LARGE_INTEGER_STRUCT),
+        ("QuadPart", LONGLONG),
+    ]
+
 
 class LUID(Structure):
-	_fields_ = [
-		("LowPart", DWORD),
-		("HighPart", LONG),
-	]
+    _fields_ = [
+        ("LowPart", DWORD),
+        ("HighPart", LONG),
+    ]
+
 
 DWORDLONG = ULONGLONG
 PDWORDLONG = POINTER(DWORDLONG)
 
+
 class OBJECTID(Structure):
-	_fields_ = [
-		("Lineage", GUID),
-		("Uniquifier", DWORD),
-	]
+    _fields_ = [
+        ("Lineage", GUID),
+        ("Uniquifier", DWORD),
+    ]
+
 
 MINCHAR = 0x80
 MAXCHAR = 0x7f
@@ -878,11 +905,14 @@ SORT_HUNGARIAN_TECHNICAL = 0x1
 SORT_GEORGIAN_TRADITIONAL = 0x0
 SORT_GEORGIAN_MODERN = 0x1
 
+
 def MAKELANGID(p, s):
-	return (s << 10) | p
+    return (s << 10) | p
+
 
 def MAKELCID(lgid, srtid):
-	return (srtid << 16) | lgid
+    return (srtid << 16) | lgid
+
 
 LOCALE_CUSTOM_DEFAULT = (MAKELCID(MAKELANGID(LANG_NEUTRAL, SUBLANG_CUSTOM_DEFAULT), SORT_DEFAULT))
 LOCALE_CUSTOM_UNSPECIFIED = (MAKELCID(MAKELANGID(LANG_NEUTRAL, SUBLANG_CUSTOM_UNSPECIFIED), SORT_DEFAULT))
@@ -962,56 +992,63 @@ MAXIMUM_WAIT_OBJECTS = 64
 
 MAXIMUM_SUSPEND_COUNT = MAXCHAR
 
+
 class XSAVE_CET_U_FORMAT(Structure):
-	_fields_ = [
-		("Ia32CetUMsr", DWORD64),
-		("Ia32Pl3SspMsr", DWORD64),
-	]
+    _fields_ = [
+        ("Ia32CetUMsr", DWORD64),
+        ("Ia32Pl3SspMsr", DWORD64),
+    ]
+
 
 class XSAVE_AREA_HEADER(Structure):
-	_fields_ = [
-		("Mask", DWORD64),
-		("CompactionMask", DWORD64),
-		("Reserved2", DWORD64*6),
-	]
+    _fields_ = [
+        ("Mask", DWORD64),
+        ("CompactionMask", DWORD64),
+        ("Reserved2", DWORD64 * 6),
+    ]
+
 
 class XSAVE_AREA(Structure):
-	_fields_ = [
-		("LegacyState", XSAVE_FORMAT),
-		("Header", XSAVE_AREA_HEADER),
-	]
+    _fields_ = [
+        ("LegacyState", XSAVE_FORMAT),
+        ("Header", XSAVE_AREA_HEADER),
+    ]
+
 
 class XSTATE_CONTEXT(Structure):
-	_fields_ = [
-		("Mask", DWORD64),
-		("Length", DWORD),
-		("Reserved1", DWORD),
-		("Area", POINTER(XSAVE_AREA)),
+    _fields_ = [
+        ("Mask", DWORD64),
+        ("Length", DWORD),
+        ("Reserved1", DWORD),
+        ("Area", POINTER(XSAVE_AREA)),
 
-		#if defined(_X86_)
-		("Reserved2", DWORD),
-		#endif
+        # if defined(_X86_)
+        ("Reserved2", DWORD),
+        # endif
 
-		("Buffer", PVOID),
+        ("Buffer", PVOID),
 
-		#if defined(_X86_)
-		("Reserved3", DWORD),
-		#endif
-	]
+        # if defined(_X86_)
+        ("Reserved3", DWORD),
+        # endif
+    ]
+
 
 class _SCOPE_RECORD(Structure):
-	_fields_ = [
-		("BeginAddress", DWORD),
-		("EndAddress", DWORD),
-		("HandlerAddress", DWORD),
-		("JumpTarget", DWORD),
-	]
+    _fields_ = [
+        ("BeginAddress", DWORD),
+        ("EndAddress", DWORD),
+        ("HandlerAddress", DWORD),
+        ("JumpTarget", DWORD),
+    ]
+
 
 class SCOPE_TABLE_AMD64(Structure):
-	_fields_ = [
-		("Count", DWORD),
-		("ScopeRecord", _SCOPE_RECORD*1),
-	]
+    _fields_ = [
+        ("Count", DWORD),
+        ("ScopeRecord", _SCOPE_RECORD * 1),
+    ]
+
 
 _MM_HINT_T0 = 1
 _MM_HINT_T1 = 2
@@ -1058,105 +1095,115 @@ UNW_FLAG_NO_EPILOGUE = 0x80000000
 
 UNWIND_HISTORY_TABLE_SIZE = 12
 
+
 class UNWIND_HISTORY_TABLE_ENTRY(Structure):
-	_fields_ = [
-		("ImageBase", DWORD64),
-		("FunctionEntry", POINTER(RUNTIME_FUNCTION)),
-	]
+    _fields_ = [
+        ("ImageBase", DWORD64),
+        ("FunctionEntry", POINTER(RUNTIME_FUNCTION)),
+    ]
+
 
 class UNWIND_HISTORY_TABLE(Structure):
-	_fields_ = [
-		("Count", DWORD),
-		("LocalHint", BYTE),
-		("GlobalHint", BYTE),
-		("Search", BYTE),
-		("Once", BYTE),
-		("LowAddress", DWORD64),
-		("HighAddress", DWORD64),
-		("Entry", UNWIND_HISTORY_TABLE_ENTRY*UNWIND_HISTORY_TABLE_SIZE),
-	]
+    _fields_ = [
+        ("Count", DWORD),
+        ("LocalHint", BYTE),
+        ("GlobalHint", BYTE),
+        ("Search", BYTE),
+        ("Once", BYTE),
+        ("LowAddress", DWORD64),
+        ("HighAddress", DWORD64),
+        ("Entry", UNWIND_HISTORY_TABLE_ENTRY * UNWIND_HISTORY_TABLE_SIZE),
+    ]
+
 
 class DISPATCHER_CONTEXT(Structure):
-	_fields_ = [
-		("ControlPc", DWORD64),
-		("ImageBase", DWORD64),
-		("FunctionEntry", POINTER(RUNTIME_FUNCTION)),
-		("EstablisherFrame", DWORD64),
-		("TargetIp", DWORD64),
-		("ContextRecord", POINTER(CONTEXT)),
-		("LanguageHandler", POINTER(EXCEPTION_ROUTINE)),
-		("HandlerData", PVOID),
-		("HistoryTable", POINTER(UNWIND_HISTORY_TABLE)),
-		("ScopeIndex", DWORD),
-		("Fill0", DWORD),
-	]
+    _fields_ = [
+        ("ControlPc", DWORD64),
+        ("ImageBase", DWORD64),
+        ("FunctionEntry", POINTER(RUNTIME_FUNCTION)),
+        ("EstablisherFrame", DWORD64),
+        ("TargetIp", DWORD64),
+        ("ContextRecord", POINTER(CONTEXT)),
+        ("LanguageHandler", POINTER(EXCEPTION_ROUTINE)),
+        ("HandlerData", PVOID),
+        ("HistoryTable", POINTER(UNWIND_HISTORY_TABLE)),
+        ("ScopeIndex", DWORD),
+        ("Fill0", DWORD),
+    ]
+
 
 class _KNONVOLATILE_CONTEXT_POINTERS_STRUCT1(Union):
-	_fields_ = [
-		("Xmm0", POINTER(M128A)),
-		("Xmm1", POINTER(M128A)),
-		("Xmm2", POINTER(M128A)),
-		("Xmm3", POINTER(M128A)),
-		("Xmm4", POINTER(M128A)),
-		("Xmm5", POINTER(M128A)),
-		("Xmm6", POINTER(M128A)),
-		("Xmm7", POINTER(M128A)),
-		("Xmm8", POINTER(M128A)),
-		("Xmm9", POINTER(M128A)),
-		("Xmm10", POINTER(M128A)),
-		("Xmm11", POINTER(M128A)),
-		("Xmm12", POINTER(M128A)),
-		("Xmm13", POINTER(M128A)),
-		("Xmm14", POINTER(M128A)),
-		("Xmm15", POINTER(M128A)),
-	]
+    _fields_ = [
+        ("Xmm0", POINTER(M128A)),
+        ("Xmm1", POINTER(M128A)),
+        ("Xmm2", POINTER(M128A)),
+        ("Xmm3", POINTER(M128A)),
+        ("Xmm4", POINTER(M128A)),
+        ("Xmm5", POINTER(M128A)),
+        ("Xmm6", POINTER(M128A)),
+        ("Xmm7", POINTER(M128A)),
+        ("Xmm8", POINTER(M128A)),
+        ("Xmm9", POINTER(M128A)),
+        ("Xmm10", POINTER(M128A)),
+        ("Xmm11", POINTER(M128A)),
+        ("Xmm12", POINTER(M128A)),
+        ("Xmm13", POINTER(M128A)),
+        ("Xmm14", POINTER(M128A)),
+        ("Xmm15", POINTER(M128A)),
+    ]
+
 
 class _KNONVOLATILE_CONTEXT_POINTERS_UNION1(Union):
-	_anonymous_ = ("u", )
-	_fields_ = [
-		("FloatingContext", POINTER(M128A)*16),
-		("u", _KNONVOLATILE_CONTEXT_POINTERS_STRUCT1),
-	]
+    _anonymous_ = ("u",)
+    _fields_ = [
+        ("FloatingContext", POINTER(M128A) * 16),
+        ("u", _KNONVOLATILE_CONTEXT_POINTERS_STRUCT1),
+    ]
+
 
 class _KNONVOLATILE_CONTEXT_POINTERS_STRUCT2(Structure):
-	_fields_ = [
-		("Rax", PDWORD64),
-		("Rcx", PDWORD64),
-		("Rdx", PDWORD64),
-		("Rbx", PDWORD64),
-		("Rsp", PDWORD64),
-		("Rbp", PDWORD64),
-		("Rsi", PDWORD64),
-		("Rdi", PDWORD64),
-		("R8", PDWORD64),
-		("R9", PDWORD64),
-		("R10", PDWORD64),
-		("R11", PDWORD64),
-		("R12", PDWORD64),
-		("R13", PDWORD64),
-		("R14", PDWORD64),
-		("R15", PDWORD64),
-	]
+    _fields_ = [
+        ("Rax", PDWORD64),
+        ("Rcx", PDWORD64),
+        ("Rdx", PDWORD64),
+        ("Rbx", PDWORD64),
+        ("Rsp", PDWORD64),
+        ("Rbp", PDWORD64),
+        ("Rsi", PDWORD64),
+        ("Rdi", PDWORD64),
+        ("R8", PDWORD64),
+        ("R9", PDWORD64),
+        ("R10", PDWORD64),
+        ("R11", PDWORD64),
+        ("R12", PDWORD64),
+        ("R13", PDWORD64),
+        ("R14", PDWORD64),
+        ("R15", PDWORD64),
+    ]
+
 
 class _KNONVOLATILE_CONTEXT_POINTERS_UNION2(Union):
-	_anonymous_ = ("u", )
-	_fields_ = [
-		("IntegerContext", PDWORD64*16),
-		("u", _KNONVOLATILE_CONTEXT_POINTERS_STRUCT2),
-	]
+    _anonymous_ = ("u",)
+    _fields_ = [
+        ("IntegerContext", PDWORD64 * 16),
+        ("u", _KNONVOLATILE_CONTEXT_POINTERS_STRUCT2),
+    ]
+
 
 class KNONVOLATILE_CONTEXT_POINTERS(Structure):
-	_anonymous_ = ("u", "v")
-	_fields_ = [
-		("u", _KNONVOLATILE_CONTEXT_POINTERS_UNION1),
-		("v", _KNONVOLATILE_CONTEXT_POINTERS_UNION2),
-	]
+    _anonymous_ = ("u", "v")
+    _fields_ = [
+        ("u", _KNONVOLATILE_CONTEXT_POINTERS_UNION1),
+        ("v", _KNONVOLATILE_CONTEXT_POINTERS_UNION2),
+    ]
+
 
 class SCOPE_TABLE_ARM(Structure):
-	_fields_ = [
-		("Count", DWORD),
-		("ScopeRecord", _SCOPE_RECORD*1),
-	]
+    _fields_ = [
+        ("Count", DWORD),
+        ("ScopeRecord", _SCOPE_RECORD * 1),
+    ]
+
 
 PF_TEMPORAL_LEVEL_1 = 0
 PF_TEMPORAL_LEVEL_2 = 1
@@ -1186,55 +1233,59 @@ INITIAL_FPSCR = 0
 ARM_MAX_BREAKPOINTS = 8
 ARM_MAX_WATCHPOINTS = 1
 
+
 class NEON128(Structure):
-	_fields_ = [
-		("Low", ULONGLONG),
-		("High", LONGLONG),
-	]
+    _fields_ = [
+        ("Low", ULONGLONG),
+        ("High", LONGLONG),
+    ]
+
 
 class _CONTEXT_UNION(Union):
-	_fields_ = [
-		("Q", NEON128*16),
-		("D", ULONGLONG*32),
-		("S", DWORD*32),
-	]
+    _fields_ = [
+        ("Q", NEON128 * 16),
+        ("D", ULONGLONG * 32),
+        ("S", DWORD * 32),
+    ]
+
 
 class CONTEXT(Structure):
-	_anonymous_ = ("u", )
-	_fields_ = [
-		("ContextFlags", DWORD),
+    _anonymous_ = ("u",)
+    _fields_ = [
+        ("ContextFlags", DWORD),
 
-		("R0", DWORD),
-		("R1", DWORD),
-		("R2", DWORD),
-		("R3", DWORD),
-		("R4", DWORD),
-		("R5", DWORD),
-		("R6", DWORD),
-		("R7", DWORD),
-		("R8", DWORD),
-		("R9", DWORD),
-		("R10", DWORD),
-		("R11", DWORD),
-		("R12", DWORD),
+        ("R0", DWORD),
+        ("R1", DWORD),
+        ("R2", DWORD),
+        ("R3", DWORD),
+        ("R4", DWORD),
+        ("R5", DWORD),
+        ("R6", DWORD),
+        ("R7", DWORD),
+        ("R8", DWORD),
+        ("R9", DWORD),
+        ("R10", DWORD),
+        ("R11", DWORD),
+        ("R12", DWORD),
 
-		("Sp", DWORD),
-		("Lr", DWORD),
-		("Pc", DWORD),
-		("Cpsr", DWORD),
+        ("Sp", DWORD),
+        ("Lr", DWORD),
+        ("Pc", DWORD),
+        ("Cpsr", DWORD),
 
-		("Fpscr", DWORD),
-		("Padding", DWORD),
+        ("Fpscr", DWORD),
+        ("Padding", DWORD),
 
-		("u", _CONTEXT_UNION),
+        ("u", _CONTEXT_UNION),
 
-		("Bvr", DWORD*ARM_MAX_BREAKPOINTS),
-		("Bcr", DWORD*ARM_MAX_BREAKPOINTS),
-		("Wvr", DWORD*ARM_MAX_WATCHPOINTS),
-		("Wcr", DWORD*ARM_MAX_WATCHPOINTS),
+        ("Bvr", DWORD * ARM_MAX_BREAKPOINTS),
+        ("Bcr", DWORD * ARM_MAX_BREAKPOINTS),
+        ("Wvr", DWORD * ARM_MAX_WATCHPOINTS),
+        ("Wcr", DWORD * ARM_MAX_WATCHPOINTS),
 
-		("Padding2", DWORD*2),
-	]
+        ("Padding2", DWORD * 2),
+    ]
+
 
 UNW_FLAG_NHANDLER = 0x0
 UNW_FLAG_EHANDLER = 0x1
@@ -1739,34 +1790,45 @@ GENERIC_WRITE = 0x40000000
 GENERIC_EXECUTE = 0x20000000
 GENERIC_ALL = 0x10000000
 
+
 class GENERIC_MAPPING(Structure):
-	_fields_ = [
-		("GenericRead", ACCESS_MASK),
-		("GenericWrite", ACCESS_MASK),
-		("GenericExecute", ACCESS_MASK),
-		("GenericAll", ACCESS_MASK),
-	]
+    _fields_ = [
+        ("GenericRead", ACCESS_MASK),
+        ("GenericWrite", ACCESS_MASK),
+        ("GenericExecute", ACCESS_MASK),
+        ("GenericAll", ACCESS_MASK),
+    ]
+
+
 PGENERIC_MAPPING = POINTER(GENERIC_MAPPING)
 
+
 class LUID_AND_ATTRIBUTES(Structure):
-	_fields_ = [
-		("Luid", LUID),
-		("Attributes", DWORD),
-	]
+    _fields_ = [
+        ("Luid", LUID),
+        ("Attributes", DWORD),
+    ]
+
 
 SID_REVISION = 1
 SID_MAX_SUB_AUTHORITIES = 15
 SID_RECOMMENDED_SUB_AUTHORITIES = 1
 SECURITY_MAX_SID_SIZE = (sizeof(SID) - sizeof(DWORD) + (SID_MAX_SUB_AUTHORITIES * sizeof(DWORD)))
+
+
 def SECURITY_SID_SIZE(SubAuthorityCount_):
-	return (sizeof(SID) - sizeof(DWORD) + (SubAuthorityCount_) * sizeof(DWORD))
+    return (sizeof(SID) - sizeof(DWORD) + (SubAuthorityCount_) * sizeof(DWORD))
+
+
 SECURITY_MAX_SID_STRING_CHARACTERS = (2 + 4 + 15 + (11 * SID_MAX_SUB_AUTHORITIES) + 1)
 
+
 class SE_SID(Union):
-	_fields_ = [
-		("Sid", SID),
-		("Buffer", BYTE*SECURITY_MAX_SID_SIZE),
-	]
+    _fields_ = [
+        ("Sid", SID),
+        ("Buffer", BYTE * SECURITY_MAX_SID_SIZE),
+    ]
+
 
 '''
 class SID_NAME_USE(CEnum):
@@ -2224,14 +2286,18 @@ ACL_REVISION3 = 3
 ACL_REVISION4 = 4
 MAX_ACL_REVISION ACL_REVISION4
 '''
+
+
 class ACL(Structure):
-	_fields_ = [
-		("AclRevision", BYTE),
-		("Sbz1", BYTE),
-		("AclSize", WORD),
-		("AceCount", WORD),
-		("Sbz2", WORD),
-	]
+    _fields_ = [
+        ("AclRevision", BYTE),
+        ("Sbz1", BYTE),
+        ("AclSize", WORD),
+        ("AceCount", WORD),
+        ("Sbz2", WORD),
+    ]
+
+
 PACL = POINTER(ACL)
 
 '''
@@ -2511,41 +2577,49 @@ SE_SACL_PROTECTED = 0x2000
 SE_RM_CONTROL_VALID = 0x4000
 SE_SELF_RELATIVE = 0x8000
 
+
 class SECURITY_DESCRIPTOR_RELATIVE(Structure):
-	_fields_ = [
-		("Revision", BYTE),
-		("Sbz1", BYTE),
-		("Control", SECURITY_DESCRIPTOR_CONTROL),
-		("Owner", DWORD),
-		("Group", DWORD),
-		("Sacl", DWORD),
-		("Dacl", DWORD),
-	]
+    _fields_ = [
+        ("Revision", BYTE),
+        ("Sbz1", BYTE),
+        ("Control", SECURITY_DESCRIPTOR_CONTROL),
+        ("Owner", DWORD),
+        ("Group", DWORD),
+        ("Sacl", DWORD),
+        ("Dacl", DWORD),
+    ]
+
 
 class SECURITY_DESCRIPTOR(Structure):
-	_fields_ = [
-		("Revision", BYTE),
-		("Sbz1", BYTE),
-		("Control", SECURITY_DESCRIPTOR_CONTROL),
-		("Owner", PSID),
-		("Group", PSID),
-		("Sacl", PACL),
-		("Dacl", PACL),
-	]
+    _fields_ = [
+        ("Revision", BYTE),
+        ("Sbz1", BYTE),
+        ("Control", SECURITY_DESCRIPTOR_CONTROL),
+        ("Owner", PSID),
+        ("Group", PSID),
+        ("Sacl", PACL),
+        ("Dacl", PACL),
+    ]
+
+
 PSECURITY_DESCRIPTOR = POINTER(SECURITY_DESCRIPTOR)
 
+
 class SECURITY_OBJECT_AI_PARAMS(Structure):
-	_fields_ = [
-		("Size", DWORD),
-		("ConstraintMask", DWORD),
-	]
+    _fields_ = [
+        ("Size", DWORD),
+        ("ConstraintMask", DWORD),
+    ]
+
 
 class OBJECT_TYPE_LIST(Structure):
-	_fields_ = [
-		("Level", WORD),
-		("Sbz", WORD),
-		("ObjectType", POINTER(GUID)),
-	]
+    _fields_ = [
+        ("Level", WORD),
+        ("Sbz", WORD),
+        ("ObjectType", POINTER(GUID)),
+    ]
+
+
 POBJECT_TYPE_LIST = POINTER(OBJECT_TYPE_LIST)
 
 ACCESS_OBJECT_GUID = 0
@@ -2553,9 +2627,11 @@ ACCESS_PROPERTY_SET_GUID = 1
 ACCESS_PROPERTY_GUID = 2
 ACCESS_MAX_LEVEL = 4
 
+
 class AUDIT_EVENT_TYPE(CEnum):
-	AuditEventObjectAccess = 0
-	AuditEventDirectoryServiceAccess = 1
+    AuditEventObjectAccess = 0
+    AuditEventDirectoryServiceAccess = 1
+
 
 AUDIT_ALLOW_NO_PRIVILEGE = 0x1
 
@@ -2572,12 +2648,15 @@ SE_PRIVILEGE_VALID_ATTRIBUTES = SE_PRIVILEGE_ENABLED_BY_DEFAULT | SE_PRIVILEGE_E
 
 PRIVILEGE_SET_ALL_NECESSARY = 1
 
+
 class PRIVILEGE_SET(Structure):
-	_fields_ = [
-		("PrivilegeCount", DWORD),
-		("Control", DWORD),
-		("Privilege", LUID_AND_ATTRIBUTES*ANYSIZE_ARRAY),
-	]
+    _fields_ = [
+        ("PrivilegeCount", DWORD),
+        ("Control", DWORD),
+        ("Privilege", LUID_AND_ATTRIBUTES * ANYSIZE_ARRAY),
+    ]
+
+
 PPRIVILEGE_SET = POINTER(PRIVILEGE_SET)
 
 ACCESS_REASON_TYPE_MASK = 0x00ff0000
@@ -2715,18 +2794,22 @@ SE_SESSION_IMPERSONATION_CAPABILITY = u"sessionImpersonation"
 SE_MUMA_CAPABILITY = u"muma"
 SE_DEVELOPMENT_MODE_NETWORK_CAPABILITY = u"developmentModeNetwork"
 
+
 class SECURITY_IMPERSONATION_LEVEL(CEnum):
-	SecurityAnonymous = 0
-	SecurityIdentification = 1
-	SecurityImpersonation = 2
-	SecurityDelegation = 3
+    SecurityAnonymous = 0
+    SecurityIdentification = 1
+    SecurityImpersonation = 2
+    SecurityDelegation = 3
+
 
 SECURITY_MAX_IMPERSONATION_LEVEL = SECURITY_IMPERSONATION_LEVEL.SecurityDelegation
 SECURITY_MIN_IMPERSONATION_LEVEL = SECURITY_IMPERSONATION_LEVEL.SecurityAnonymous
 DEFAULT_IMPERSONATION_LEVEL = SECURITY_IMPERSONATION_LEVEL.SecurityImpersonation
 
+
 def VALID_IMPERSONATION_LEVEL(L):
-	return (L >= SECURITY_MIN_IMPERSONATION_LEVEL) and (L <= SECURITY_MAX_IMPERSONATION_LEVEL)
+    return (L >= SECURITY_MIN_IMPERSONATION_LEVEL) and (L <= SECURITY_MAX_IMPERSONATION_LEVEL)
+
 
 TOKEN_ASSIGN_PRIMARY = 0x0001
 TOKEN_DUPLICATE = 0x0002
@@ -2841,17 +2924,24 @@ typedef struct _TOKEN_GROUPS {
 #endif
 } TOKEN_GROUPS, *PTOKEN_GROUPS
 '''
+
+
 class TOKEN_PRIVILEGES(Structure):
-	_fields_ = [
-		("PrivilegeCount", DWORD),
-		("Privileges", LUID_AND_ATTRIBUTES * ANYSIZE_ARRAY)
-	]
+    _fields_ = [
+        ("PrivilegeCount", DWORD),
+        ("Privileges", LUID_AND_ATTRIBUTES * ANYSIZE_ARRAY)
+    ]
+
+
 PTOKEN_PRIVILEGES = POINTER(TOKEN_PRIVILEGES)
 
+
 class TOKEN_OWNER(Structure):
-	_fields_ = [
-		("Owner", PSID),
-	]
+    _fields_ = [
+        ("Owner", PSID),
+    ]
+
+
 PTOKEN_OWNER = POINTER(TOKEN_OWNER)
 
 '''
@@ -4073,122 +4163,155 @@ TIME_ZONE_ID_STANDARD 1
 TIME_ZONE_ID_DAYLIGHT 2
 
 '''
+
+
 class LOGICAL_PROCESSOR_RELATIONSHIP(CEnum):
-	RelationProcessorCore = 0
-	RelationNumaNode = 1
-	RelationCache = 2
-	RelationProcessorPackage = 3
-	RelationGroup = 4
-	RelationAll = 0xffff
+    RelationProcessorCore = 0
+    RelationNumaNode = 1
+    RelationCache = 2
+    RelationProcessorPackage = 3
+    RelationGroup = 4
+    RelationAll = 0xffff
+
 
 LTP_PC_SMT = 0x1
 
+
 class PROCESSOR_CACHE_TYPE(CEnum):
-	CacheUnified = 0
-	CacheInstruction = 1
-	CacheData = 2
-	CacheTrace = 3
+    CacheUnified = 0
+    CacheInstruction = 1
+    CacheData = 2
+    CacheTrace = 3
+
 
 CACHE_FULLY_ASSOCIATIVE = 0xFF
 
+
 class CACHE_DESCRIPTOR(Structure):
-	_fields_ = [
-		("Level", BYTE),
-		("Associativity", BYTE),
-		("LineSize", WORD),
-		("Size", DWORD),
-		("Type", PROCESSOR_CACHE_TYPE),
-	]
+    _fields_ = [
+        ("Level", BYTE),
+        ("Associativity", BYTE),
+        ("LineSize", WORD),
+        ("Size", DWORD),
+        ("Type", PROCESSOR_CACHE_TYPE),
+    ]
+
+
 PCACHE_DESCRIPTOR = POINTER(CACHE_DESCRIPTOR)
 
+
 class SYSTEM_LOGICAL_PROCESSOR_INFORMATION_PROCESSORCORE(Structure):
-	_fields_ = [
-		("Flags", BYTE),
-	]
+    _fields_ = [
+        ("Flags", BYTE),
+    ]
+
 
 class SYSTEM_LOGICAL_PROCESSOR_INFORMATION_NUMANODE(Structure):
-	_fields_ = [
-		("NodeNumber", DWORD),
-	]
+    _fields_ = [
+        ("NodeNumber", DWORD),
+    ]
+
 
 class SYSTEM_LOGICAL_PROCESSOR_INFORMATION_DUMMYUNIONNAME(Union):
-	_fields_ = [
-		("ProcessorCore", SYSTEM_LOGICAL_PROCESSOR_INFORMATION_PROCESSORCORE),
-		("NumaNode", SYSTEM_LOGICAL_PROCESSOR_INFORMATION_NUMANODE),
-		("Cache", CACHE_DESCRIPTOR),
-		("Reserved", ULONGLONG*2),
-	]
+    _fields_ = [
+        ("ProcessorCore", SYSTEM_LOGICAL_PROCESSOR_INFORMATION_PROCESSORCORE),
+        ("NumaNode", SYSTEM_LOGICAL_PROCESSOR_INFORMATION_NUMANODE),
+        ("Cache", CACHE_DESCRIPTOR),
+        ("Reserved", ULONGLONG * 2),
+    ]
+
 
 class SYSTEM_LOGICAL_PROCESSOR_INFORMATION(Structure):
-	_anonymous_ = ["Dummy"]
-	_fields_ = [
-		("ProcessorMask", ULONG_PTR),
-		("Relationship", LOGICAL_PROCESSOR_RELATIONSHIP),
-		("Dummy", SYSTEM_LOGICAL_PROCESSOR_INFORMATION_DUMMYUNIONNAME),
-	]
+    _anonymous_ = ["Dummy"]
+    _fields_ = [
+        ("ProcessorMask", ULONG_PTR),
+        ("Relationship", LOGICAL_PROCESSOR_RELATIONSHIP),
+        ("Dummy", SYSTEM_LOGICAL_PROCESSOR_INFORMATION_DUMMYUNIONNAME),
+    ]
+
+
 PSYSTEM_LOGICAL_PROCESSOR_INFORMATION = POINTER(SYSTEM_LOGICAL_PROCESSOR_INFORMATION)
 
+
 class PROCESSOR_RELATIONSHIP(Structure):
-	_fields_ = [
-		("EfficiencyClass", BYTE),
-		("Reserved", BYTE*20),
-		("GroupCount", WORD),
-		("GroupMask", GROUP_AFFINITY*ANYSIZE_ARRAY),
-	]
+    _fields_ = [
+        ("EfficiencyClass", BYTE),
+        ("Reserved", BYTE * 20),
+        ("GroupCount", WORD),
+        ("GroupMask", GROUP_AFFINITY * ANYSIZE_ARRAY),
+    ]
+
+
 PPROCESSOR_RELATIONSHIP = POINTER(PROCESSOR_RELATIONSHIP)
 
+
 class NUMA_NODE_RELATIONSHIP(Structure):
-	_fields_ = [
-		("NodeNumber", DWORD),
-		("Reserved", BYTE*20),
-		("GroupMask", GROUP_AFFINITY),
-	]
+    _fields_ = [
+        ("NodeNumber", DWORD),
+        ("Reserved", BYTE * 20),
+        ("GroupMask", GROUP_AFFINITY),
+    ]
+
+
 PNUMA_NODE_RELATIONSHIP = POINTER(NUMA_NODE_RELATIONSHIP)
 
+
 class CACHE_RELATIONSHIP(Structure):
-	_fields_ = [
-		("Level", BYTE),
-		("Associativity", BYTE),
-		("LineSize", WORD),
-		("CacheSize", DWORD),
-		("Type", PROCESSOR_CACHE_TYPE),
-		("Reserved", BYTE*20),
-		("GroupMask", GROUP_AFFINITY),
-	]
+    _fields_ = [
+        ("Level", BYTE),
+        ("Associativity", BYTE),
+        ("LineSize", WORD),
+        ("CacheSize", DWORD),
+        ("Type", PROCESSOR_CACHE_TYPE),
+        ("Reserved", BYTE * 20),
+        ("GroupMask", GROUP_AFFINITY),
+    ]
+
+
 PCACHE_RELATIONSHIP = POINTER(CACHE_RELATIONSHIP)
 
+
 class PROCESSOR_GROUP_INFO(Structure):
-	_fields_ = [
-		("MaximumProcessorCount", BYTE),
-		("ActiveProcessorCount", BYTE*38),
-		("ActiveProcessorMask", KAFFINITY),
-	]
+    _fields_ = [
+        ("MaximumProcessorCount", BYTE),
+        ("ActiveProcessorCount", BYTE * 38),
+        ("ActiveProcessorMask", KAFFINITY),
+    ]
+
+
 PPROCESSOR_GROUP_INFO = POINTER(PROCESSOR_GROUP_INFO)
 
+
 class GROUP_RELATIONSHIP(Structure):
-	_fields_ = [
-		("MaximumGroupCount", WORD),
-		("ActiveGroupCount", WORD),
-		("Reserved", BYTE*20),
-		("GroupInfo", PROCESSOR_GROUP_INFO*ANYSIZE_ARRAY),
-	]
+    _fields_ = [
+        ("MaximumGroupCount", WORD),
+        ("ActiveGroupCount", WORD),
+        ("Reserved", BYTE * 20),
+        ("GroupInfo", PROCESSOR_GROUP_INFO * ANYSIZE_ARRAY),
+    ]
+
+
 PGROUP_RELATIONSHIP = POINTER(GROUP_RELATIONSHIP)
 
+
 class SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX_DUMMYUNIONNAME(Union):
-	_fields_ = [
-		("Processor", PROCESSOR_RELATIONSHIP),
-		("NumaNode", NUMA_NODE_RELATIONSHIP),
-		("Cache", CACHE_RELATIONSHIP),
-		("Group", GROUP_RELATIONSHIP),
-	]
+    _fields_ = [
+        ("Processor", PROCESSOR_RELATIONSHIP),
+        ("NumaNode", NUMA_NODE_RELATIONSHIP),
+        ("Cache", CACHE_RELATIONSHIP),
+        ("Group", GROUP_RELATIONSHIP),
+    ]
+
 
 class SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX(Structure):
-	_anonymous_ = ["Dummy"]
-	_fields_ = [
-		("Relationship", LOGICAL_PROCESSOR_RELATIONSHIP),
-		("Size", DWORD),
-		("Dummy", SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX_DUMMYUNIONNAME),
-	]
+    _anonymous_ = ["Dummy"]
+    _fields_ = [
+        ("Relationship", LOGICAL_PROCESSOR_RELATIONSHIP),
+        ("Size", DWORD),
+        ("Dummy", SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX_DUMMYUNIONNAME),
+    ]
+
+
 PSYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX = POINTER(SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX)
 
 '''
@@ -4238,10 +4361,13 @@ SYSTEM_CPU_SET_INFORMATION_REALTIME 0x8
 typedef struct _SYSTEM_CPU_SET_INFORMATION SYSTEM_CPU_SET_INFORMATION, *PSYSTEM_CPU_SET_INFORMATION
 '''
 
+
 class SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION(Structure):
-	_fields_ = [
-		("CycleTime", DWORD64),
-	]
+    _fields_ = [
+        ("CycleTime", DWORD64),
+    ]
+
+
 PSYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION = POINTER(SYSTEM_PROCESSOR_CYCLE_TIME_INFORMATION)
 
 '''
@@ -4673,42 +4799,47 @@ FILE_SUPPORTS_GHOSTING = 0x40000000
 
 FILE_INVALID_FILE_ID = LONGLONG(-1)
 
+
 class FILE_ID_128(Structure):
-	_fields_ = [
-		("Identifier", BYTE*16),
-	]
+    _fields_ = [
+        ("Identifier", BYTE * 16),
+    ]
+
 
 class FILE_NOTIFY_INFORMATION(Structure):
-	_fields_ = [
-		("NextEntryOffset", DWORD),
-		("Action", DWORD),
-		("FileNameLength", DWORD),
-		("FileName", WCHAR*1),
-	]
+    _fields_ = [
+        ("NextEntryOffset", DWORD),
+        ("Action", DWORD),
+        ("FileNameLength", DWORD),
+        ("FileName", WCHAR * 1),
+    ]
+
 
 class FILE_NOTIFY_EXTENDED_INFORMATION(Structure):
-	_fields_ = [
-		("NextEntryOffset", DWORD),
-		("Action", DWORD),
-		("CreationTime", LARGE_INTEGER),
-		("LastModificationTime", LARGE_INTEGER),
-		("LastChangeTime", LARGE_INTEGER),
-		("LastAccessTime", LARGE_INTEGER),
-		("AllocatedLength", LARGE_INTEGER),
-		("FileSize", LARGE_INTEGER),
-		("FileAttributes", DWORD),
-		("ReparsePointTag", DWORD),
-		("FileId", LARGE_INTEGER),
-		("ParentFileId", LARGE_INTEGER),
-		("FileNameLength", DWORD),
-		("FileName", WCHAR*1),
-	]
+    _fields_ = [
+        ("NextEntryOffset", DWORD),
+        ("Action", DWORD),
+        ("CreationTime", LARGE_INTEGER),
+        ("LastModificationTime", LARGE_INTEGER),
+        ("LastChangeTime", LARGE_INTEGER),
+        ("LastAccessTime", LARGE_INTEGER),
+        ("AllocatedLength", LARGE_INTEGER),
+        ("FileSize", LARGE_INTEGER),
+        ("FileAttributes", DWORD),
+        ("ReparsePointTag", DWORD),
+        ("FileId", LARGE_INTEGER),
+        ("ParentFileId", LARGE_INTEGER),
+        ("FileNameLength", DWORD),
+        ("FileName", WCHAR * 1),
+    ]
+
 
 class FILE_SEGMENT_ELEMENT(Structure):
-	_fields_ = [
-		("Buffer", PVOID64),
-		("Alignment", ULONGLONG),
-	]
+    _fields_ = [
+        ("Buffer", PVOID64),
+        ("Alignment", ULONGLONG),
+    ]
+
 
 FLUSH_FLAGS_FILE_DATA_ONLY = 0x00000001
 FLUSH_FLAGS_NO_SYNC = 0x00000002
@@ -8576,26 +8707,33 @@ typedef struct _MESSAGE_RESOURCE_DATA {
  MESSAGE_RESOURCE_BLOCK Blocks[ 1 ]
 } MESSAGE_RESOURCE_DATA, *PMESSAGE_RESOURCE_DATA
 '''
+
+
 class OSVERSIONINFOA(Structure):
-	_fields_ = [
-		("dwOSVersionInfoSize", DWORD),
-		("dwMajorVersion", DWORD),
-		("dwMinorVersion", DWORD),
-		("dwBuildNumber", DWORD),
-		("dwPlatformId", DWORD),
-		("szCSDVersion", CHAR*128),
-	]
+    _fields_ = [
+        ("dwOSVersionInfoSize", DWORD),
+        ("dwMajorVersion", DWORD),
+        ("dwMinorVersion", DWORD),
+        ("dwBuildNumber", DWORD),
+        ("dwPlatformId", DWORD),
+        ("szCSDVersion", CHAR * 128),
+    ]
+
+
 LPOSVERSIONINFOA = POINTER(OSVERSIONINFOA)
 
+
 class OSVERSIONINFOW(Structure):
-	_fields_ = [
-		("dwOSVersionInfoSize", DWORD),
-		("dwMajorVersion", DWORD),
-		("dwMinorVersion", DWORD),
-		("dwBuildNumber", DWORD),
-		("dwPlatformId", DWORD),
-		("szCSDVersion", WCHAR*128),
-	]
+    _fields_ = [
+        ("dwOSVersionInfoSize", DWORD),
+        ("dwMajorVersion", DWORD),
+        ("dwMinorVersion", DWORD),
+        ("dwBuildNumber", DWORD),
+        ("dwPlatformId", DWORD),
+        ("szCSDVersion", WCHAR * 128),
+    ]
+
+
 LPOSVERSIONINFOW = POINTER(OSVERSIONINFOW)
 
 '''
@@ -8811,13 +8949,16 @@ RTL_CRITICAL_SECTION_FLAG_STATIC_INIT = 0x04000000
 RTL_CRITICAL_SECTION_FLAG_RESOURCE_TYPE = 0x08000000
 RTL_CRITICAL_SECTION_FLAG_FORCE_DEBUG_INFO = 0x10000000
 RTL_CRITICAL_SECTION_ALL_FLAG_BITS = 0xFF000000
-RTL_CRITICAL_SECTION_FLAG_RESERVED = RTL_CRITICAL_SECTION_ALL_FLAG_BITS & (~(RTL_CRITICAL_SECTION_FLAG_NO_DEBUG_INFO | RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN | RTL_CRITICAL_SECTION_FLAG_STATIC_INIT | RTL_CRITICAL_SECTION_FLAG_RESOURCE_TYPE | RTL_CRITICAL_SECTION_FLAG_FORCE_DEBUG_INFO))
+RTL_CRITICAL_SECTION_FLAG_RESERVED = RTL_CRITICAL_SECTION_ALL_FLAG_BITS & (~(
+            RTL_CRITICAL_SECTION_FLAG_NO_DEBUG_INFO | RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN | RTL_CRITICAL_SECTION_FLAG_STATIC_INIT | RTL_CRITICAL_SECTION_FLAG_RESOURCE_TYPE | RTL_CRITICAL_SECTION_FLAG_FORCE_DEBUG_INFO))
 RTL_CRITICAL_SECTION_DEBUG_FLAG_STATIC_INIT = 0x00000001
 
+
 class HEAP_INFORMATION_CLASS(CEnum):
-	HeapCompatibilityInformation = 0
-	HeapEnableTerminationOnCorruption = 1
-	HeapOptimizeResources = 3
+    HeapCompatibilityInformation = 0
+    HeapEnableTerminationOnCorruption = 1
+    HeapOptimizeResources = 3
+
 
 HEAP_OPTIMIZE_RESOURCES_CURRENT_VERSION = 1
 
@@ -8839,19 +8980,21 @@ WT_EXECUTEINPERSISTENTIOTHREAD = 0x00000040
 WT_EXECUTEINPERSISTENTTHREAD = 0x00000080
 WT_TRANSFER_IMPERSONATION = 0x00000100
 
-class ACTIVATION_CONTEXT_INFO_CLASS(CEnum):
-	ActivationContextBasicInformation = 1
-	ActivationContextDetailedInformation = 2
-	AssemblyDetailedInformationInActivationContext = 3
-	FileInformationInAssemblyOfAssemblyInActivationContext = 4
-	RunlevelInformationInActivationContext = 5
-	CompatibilityInformationInActivationContext = 6
-	ActivationContextManifestResourceName = 7
-	MaxActivationContextInfoClass = 8
 
-	# compatibility with old names
-	AssemblyDetailedInformationInActivationContxt = 3
-	FileInformationInAssemblyOfAssemblyInActivationContxt = 4
+class ACTIVATION_CONTEXT_INFO_CLASS(CEnum):
+    ActivationContextBasicInformation = 1
+    ActivationContextDetailedInformation = 2
+    AssemblyDetailedInformationInActivationContext = 3
+    FileInformationInAssemblyOfAssemblyInActivationContext = 4
+    RunlevelInformationInActivationContext = 5
+    CompatibilityInformationInActivationContext = 6
+    ActivationContextManifestResourceName = 7
+    MaxActivationContextInfoClass = 8
+
+    # compatibility with old names
+    AssemblyDetailedInformationInActivationContxt = 3
+    FileInformationInAssemblyOfAssemblyInActivationContxt = 4
+
 
 ACTIVATIONCONTEXTINFOCLASS = ACTIVATION_CONTEXT_INFO_CLASS
 
